@@ -11,7 +11,8 @@ function PCSD(X,Y,varargin)
 try Y                                  ; catch Y  = X*0;    end
 try s  = eval(['@' lower(varargin{1})]); catch s  = @real;  end
 try Hz = varargin{2}                   ; catch Hz = 1:size(X,1); end 
-if  isempty(Y); Y = X*0; end
+if  isempty(Y); DoY = 0; else DoY = 1; end
+try ttitle = varargin{3}; catch; ttitle = []; end
 
 f = @(x,s,m,n)squeeze(s(x(:,m,n)));
 
@@ -20,14 +21,46 @@ b = 0;
 
 for m = 1:p
     for n = 1:p
+        if n >= m
+            
         if m == n; cl = 'g'; 
         else       cl = 'b';
         end
         b = b + 1;
         subplot(p,p,b);
         plot(Hz,f(X,s,m,n),cl); hold on;
-        plot(Hz,f(Y,s,m,n),'r');
+        if DoY;
+            plot(Hz,f(Y,s,m,n),'r');
+        end
+        hold off;
         xlim([Hz(1) Hz(end)]);
+        
+        if ~isempty(ttitle) && b == 1;
+            title(ttitle,'fontsize',16);
+        end
+        
+        else
+            b = b + 1;
+        end
     end
 end
         
+
+% Esimates:
+%--------------------------------------------------------------------------
+% DCM.dtf                   - directed transfer functions (source space)
+% DCM.ccf                   - cross covariance functions (source space)
+% DCM.coh                   - cross coherence functions (source space)
+% DCM.fsd                   - specific delay functions (source space)
+% DCM.pst                   - peristimulus time
+% DCM.Hz                    - frequency
+%
+% DCM.Ep                    - conditional expectation
+% DCM.Cp                    - conditional covariance
+% DCM.Pp                    - conditional probability
+% DCM.Hc                    - conditional responses (y), channel space
+% DCM.Rc                    - conditional residuals (y), channel space
+% DCM.Hs                    - conditional responses (y), source space
+% DCM.Ce                    - eML error covariance
+% DCM.F                     - Laplace log evidence
+% DCM.ID                    -  data ID

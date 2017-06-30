@@ -541,20 +541,38 @@ for k = 1:M.Nmax
             grid on
             
         else
-            try M.ShowNodes ... Alex option: subplot node predictions
+            ShowNodes = 0;
+            try ShowNodes = M.ShowNodes; end
+            if M.ShowNodes ... Alex option: subplot node predictions
                 
                 for npt = 1:length(M.U)
                     df =reshape(f,[length(x),length(M.U),nr/length(M.U)]);
                     de =reshape(f+e,[length(x),length(M.U),nr/length(M.U)]);
-                    subplot(2,length(M.U),npt),...
-                        plot(x,squeeze(df(:,npt,:)));     hold on
-                        plot(x,squeeze(de(:,npt,:)),':'), hold off
+                    subplot(3,length(M.U),npt),...
+                        plot(x,real(squeeze(df(:,npt,:))));     hold on
+                        plot(x,real(squeeze(de(:,npt,:))),':'), hold off
+                        title([strrep(Y.name{npt},'_',' '), ' [real]'],'fontsize',14);
+                        xlabel(xLab)
+                end
+                %xlabel(xLab)
+                %ylabel('real')
+                %title(tstr,'FontSize',16)
+                
+                % & imaginary
+                for npt = 1:length(M.U)
+                    df =reshape(f,[length(x),length(M.U),nr/length(M.U)]);
+                    de =reshape(f+e,[length(x),length(M.U),nr/length(M.U)]);
+                    subplot(3,length(M.U),npt+4),...
+                        plot(x,imag(squeeze(df(:,npt,:))));     hold on
+                        plot(x,imag(squeeze(de(:,npt,:))),':'), hold off
+                        title([strrep(Y.name{npt},'_',' '), ' [imag]'],'fontsize',14);
+                        xlabel(xLab)                        
                 end
                 xlabel(xLab)
-                ylabel('real')
-                title(tstr,'FontSize',16)
+                %ylabel('imaginary')
+                %title(tstr,'FontSize',16)                
                 
-            catch
+            else
                 
                 subplot(2,2,1)
                 plot(x,real(f),'r','LineWidth',2), hold on
@@ -576,7 +594,13 @@ for k = 1:M.Nmax
         
         % subplot parameters
         %--------------------------------------------------------------
-        subplot(2,1,2)
+        try M.ShowNodes;
+            plotn = [(2*length(M.U)) + 1, (3*length(M.U))];
+            subplot(3,length(M.U),plotn);
+        catch
+            subplot(2,1,2);
+        end
+        
         bar(full(V*p(ip)))
         xlabel('parameter')
         tstr = 'conditional [minus prior] expectation';
