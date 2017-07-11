@@ -6,18 +6,21 @@ function PCSD(X,Y,varargin)
 %           PCSD(X,Y);        % plot 3D doubles x & y 
 %           PCSD(X,Y,'imag'); % imaginary part only
 %           PCSD(X,Y,'real'); % real part only 
+%           PCSD(X,[],[],Hz); % provide freq/time steps
 % AS
 
-try Y                                  ; catch Y  = X*0;    end
-try s  = eval(['@' lower(varargin{1})]); catch s  = @real;  end
+try Y                                  ; catch Y  = X*0;         end
+try s  = eval(['@' lower(varargin{1})]); catch s  = @real;       end
 try Hz = varargin{2}                   ; catch Hz = 1:size(X,1); end 
-if  isempty(Y); DoY = 0; else DoY = 1; end
+
+if  isempty(Y); DoY = 0;  else   DoY    = 1; end
 try ttitle = varargin{3}; catch; ttitle = []; end
 
 f = @(x,s,m,n)squeeze(s(x(:,m,n)));
 
 p = size(X,2);
 b = 0;
+l = 3;
 
 for m = 1:p
     for n = 1:p
@@ -28,9 +31,9 @@ for m = 1:p
         end
         b = b + 1;
         subplot(p,p,b);
-        plot(Hz,f(X,s,m,n),cl); hold on;
+        plot(Hz,f(X,s,m,n),cl,'LineWidth',l); hold on;
         if DoY;
-            plot(Hz,f(Y,s,m,n),'r');
+            plot(Hz,f(Y,s,m,n),'r','LineWidth',l);
         end
         hold off;
         xlim([Hz(1) Hz(end)]);

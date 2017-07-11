@@ -29,6 +29,7 @@ end
 
 function makeplots(DCM)
 
+
 % Power spectra (Act & Pred)
 %---------------------------------------
 figure,PCSD(DCM.Hc{:}+DCM.Rc{:},DCM.Hc{:},'real',DCM.Hz,'Data & Predicted Spectra (real)');
