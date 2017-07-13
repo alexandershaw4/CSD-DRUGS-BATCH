@@ -62,8 +62,8 @@ else
     DCM.B(2:length(DCM.xU.X))=DCM.B;
     
     % Functions
-    DCM = CustomPriors(DCM,Ns);    % anything non-default / built in
-    DCM = PrepData(DCM,Ns,tCode);  % evaluate empirical data
+    DCM = CustomPriors(DCM,Ns,Config);    % anything non-default / built in
+    DCM = PrepData(DCM,Ns,tCode,Config);  % evaluate empirical data
     DCM = MakeAndInvert(DCM);      % invert the model & save it
 end
 end
@@ -71,36 +71,72 @@ end
 
 
 
-function DCM = PrepData(DCM,Ns,tCode)
+function DCM = PrepData(DCM,Ns,tCode,Config)
 % Sets options for the empirical data, with new options including
 % baselining, filtering and using a set % of trials.
 
 DCM.M.U            = sparse(diag(ones(Ns,1)));  ... ignore [modes]
 DCM.options.trials = tCode;                     ... trial code [GroupDataLocs]
-DCM.options.Tdcm   = [1 2000];       ... peristimulus time
-DCM.options.Fdcm   = [13 30];        ... frequency window
-%DCM.options.D      = 2;             ... downsample
-DCM.options.han    = 1;             ... apply hanning window
+
+try   DCM.options.Tdcm = Config.pst;
+catch DCM.options.Tdcm   = [1 2000];       ... peristimulus time
+end
+
+try   DCM.options.Fdcm = Config.FreqWin;
+catch DCM.options.Fdcm = [13 30];          ... frequency window
+end
+
+try   DCM.options.D  = Config.Downsample;
+catch DCM.options.D  = 0;                  ... downsample
+end
+
+try   DCM.options.han = Config.Han;
+catch DCM.options.han = 1;                 ... apply hanning window
+end 
+
 DCM.options.h      = 4;             ... can't remember
 DCM.options.DoData = 1;             ... leave on [custom]
-%DCM.options.baseTdcm = [-100 0];      ... baseline times [new!]
+
+try Config.BaseTimes;
+    DCM.options.baseTdcm = Config.BaseTimes;
+end
+
+%DCM.options.baseTdcm = [-100 0];    ... baseline times [new!]
 %DCM.options.Fltdcm = [1 45];        ... bp filter [new!]
 %DCM.options.Window = 8;             ... sliding window [new!]
 
-DCM.options.analysis      = 'CSD';  ... analyse type
-DCM.xY.modality           = 'LFP';  ... ECD or LFP data? [LFP]
-DCM.options.spatial       = 'LFP';  ... spatial model [LFP]
-DCM.options.model         = 'cmm_nmda';  ... neural model
-DCM.options.Nmodes        = length(DCM.M.U);
+try   DCM.options.analysis = Config.Anal;
+catch DCM.options.analysis = 'CSD';  ... analyse type
+end
 
-DCM.xY.name     = {'Angular_L','Angular_R','L_Paracentral_Lob','R_Paracentral_Lob'};
-DCM.Sname       = DCM.xY.name';
-DCM.xY.Ic       = [1:Ns];
+try   DCM.xY.modality = Config.Type;
+catch DCM.xY.modality = 'LFP';       ... ECD or LFP data? [LFP]
+end
+
+try   DCM.options.spatial = Config.Spatial;
+catch DCM.options.spatial = 'LFP';   ... spatial model [LFP]
+end
+
+try   DCM.options.model   = Config.Neural;
+catch DCM.options.model   = 'cmm_nmda';  ... neural model
+end
 
 
-DCM.options.UseButterband = [13 30];
+DCM.options.Nmodes  = length(DCM.M.U);
+DCM.xY.name         = {'Angular_L','Angular_R','L_Paracentral_Lob','R_Paracentral_Lob'};
+DCM.Sname           = DCM.xY.name';
+DCM.xY.Ic           = [1:Ns];
+
+try   DCM.options.UseButterband = Config.Filter;
+catch DCM.options.UseButterband = [1 100];
+end
+
+if isempty(DCM.options.UseButterband);
+    DCM.options = rmfield(DCM.options,'UseButterband');
+end
+
 DCM.options.UseWelch = 0;
-DCM.options.Smooth = 0;
+DCM.options.Smooth   = 0;
 
 %DCM = spm_dcm_csd_data(DCM);
 DCM = spm_dcm_csd_data_as(DCM);
@@ -111,7 +147,7 @@ end
 
 
 
-function DCM = CustomPriors(DCM,Ns)
+function DCM = CustomPriors(DCM,Ns,Config)
 
 % This will put a bunch of custom (non-DCM/SPM) functions or priors into a
 % new structure in the DCM. These will be copied over in the call to
@@ -120,7 +156,6 @@ function DCM = CustomPriors(DCM,Ns)
 % to copy over it's contents prior to inversion.
 
 DCM.CUSTOM      = [];
-DCM.CUSTOM.f    = 'spm_fx_cmm_NMDA';            ... generative model  (.m)
 DCM.CUSTOM.pE   = [];                           ... intrinsic priors
 %DCM.CUSTOM.pE.G = zeros(Ns,13);                 ... [local coupling]
 %DCM.CUSTOM.pC.G = zeros(Ns,13);                 ... variance [off]

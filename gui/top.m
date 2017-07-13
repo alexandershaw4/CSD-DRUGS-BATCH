@@ -7,7 +7,7 @@ function varargout = top(varargin)
 % AS
 
 
-% Last Modified by GUIDE v2.5 12-Jul-2017 14:06:25
+% Last Modified by GUIDE v2.5 13-Jul-2017 17:49:27
 
 
 
@@ -442,3 +442,32 @@ handles.DESIGN = mFILENAME;
 
 % Save in handle
 guidata(hObject, handles);
+
+
+
+function edit12_Callback(hObject, eventdata, handles)
+% hObject    handle to edit12 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit12 as text
+%        str2double(get(hObject,'String')) returns contents of edit12 as a double
+
+% RETURN BASELINE TIMES
+handles.BaseTimes = str2double(get(hObject,'String'));
+
+% Save in handle
+guidata(hObject, handles);
+
+
+% --- Executes during object creation, after setting all properties.
+function edit12_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit12 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
