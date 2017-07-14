@@ -3,5 +3,5 @@ function startgui()
 %
 % AS
 
-addpath(genpath(mfilename('fullpath')));
+addpath(genpath(fileparts(mfilename('fullpath'))));
 top;
