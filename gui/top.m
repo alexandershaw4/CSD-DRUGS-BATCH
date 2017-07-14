@@ -147,7 +147,7 @@ function edit3_Callback(hObject, eventdata, handles)
 %        str2double(get(hObject,'String')) returns contents of edit3 as a double
 
 % RETURN PST
-handles.pst = str2double(get(hObject,'String'));
+handles.pst = str2num(get(hObject,'String'));
 
 % Save in handle
 guidata(hObject, handles);
@@ -176,7 +176,7 @@ function edit4_Callback(hObject, eventdata, handles)
 %        str2double(get(hObject,'String')) returns contents of edit4 as a double
 
 % RETURN FREQ WIN
-handles.FreqWin = str2double(get(hObject,'String'));
+handles.FreqWin = str2num(get(hObject,'String'));
 
 
 % Save in handle
@@ -206,7 +206,7 @@ function edit5_Callback(hObject, eventdata, handles)
 %        str2double(get(hObject,'String')) returns contents of edit5 as a double
 
 % RETURN HAN
-handles.Han = str2double(get(hObject,'String'));
+handles.Han = str2num(get(hObject,'String'));
 
 
 % Save in handle
@@ -236,7 +236,7 @@ function edit6_Callback(hObject, eventdata, handles)
 %        str2double(get(hObject,'String')) returns contents of edit6 as a double
 
 % RETURN DOWNSAMPLE
-handles.Downsample = str2double(get(hObject,'String'));
+handles.Downsample = str2num(get(hObject,'String'));
 
 % Save in handle
 guidata(hObject, handles);
@@ -265,7 +265,7 @@ function edit7_Callback(hObject, eventdata, handles)
 %        str2double(get(hObject,'String')) returns contents of edit7 as a double
 
 % RETURN BP_FILT WIN
-handles.Filter = str2double(get(hObject,'String'));
+handles.Filter = str2num(get(hObject,'String'));
 
 % Save in handle
 guidata(hObject, handles);
@@ -454,7 +454,7 @@ function edit12_Callback(hObject, eventdata, handles)
 %        str2double(get(hObject,'String')) returns contents of edit12 as a double
 
 % RETURN BASELINE TIMES
-handles.BaseTimes = str2double(get(hObject,'String'));
+handles.BaseTimes = str2num(get(hObject,'String'));
 
 % Save in handle
 guidata(hObject, handles);

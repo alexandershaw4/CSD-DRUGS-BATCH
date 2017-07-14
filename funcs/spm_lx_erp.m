@@ -28,6 +28,8 @@ L       = spm_erp_L(P,dipfit);               % lead field per source
 
 % L       = kron(P.J,L);                       % lead-field per state
 
+try
+    
 l = kron(P.J(1,:),L);
 
 L1 = kron(P.J(1,:),L); % IFG's
@@ -55,6 +57,9 @@ L(4,22) = L1(4,22); % DP
 L(5,23) = L2(5,23); % DP
 L(6,24) = L3(6,24); % DP
 
+catch
+    L       = kron(P.J,L);
+end
     
 
 

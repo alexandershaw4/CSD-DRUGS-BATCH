@@ -87,7 +87,10 @@ catch DCM.options.Fdcm = [13 30];          ... frequency window
 end
 
 try   DCM.options.D  = Config.Downsample;
-catch DCM.options.D  = 0;                  ... downsample
+catch DCM.options.D  = 1;                  ... downsample
+end
+if  DCM.options.D == 0;
+    DCM.options.D =  1;
 end
 
 try   DCM.options.han = Config.Han;
