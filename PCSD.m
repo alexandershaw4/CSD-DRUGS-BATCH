@@ -22,6 +22,8 @@ p = size(X,2);
 b = 0;
 l = 3;
 
+plottype = 'plot';%'scatter'; % plot / scatter
+
 for m = 1:p
     for n = 1:p
         if n >= m
@@ -31,12 +33,20 @@ for m = 1:p
         end
         b = b + 1;
         subplot(p,p,b);
-        plot(Hz,f(X,s,m,n),cl,'LineWidth',l); hold on;
-        if DoY;
-            plot(Hz,f(Y,s,m,n),'r','LineWidth',l);
+        switch plottype
+            case 'plot'
+                plot(Hz,f(X,s,m,n),cl,'LineWidth',l); hold on;
+                if DoY;
+                    plot(Hz,f(Y,s,m,n),'r','LineWidth',l);
+                end
+                hold off;
+                xlim([Hz(1) Hz(end)]);
+            
+            case 'scatter'
+                if DoY;
+                    scatter(f(X,s,m,n),f(Y,s,m,n));
+                end
         end
-        hold off;
-        xlim([Hz(1) Hz(end)]);
         
         if ~isempty(ttitle) && b == 1;
             title(ttitle,'fontsize',16);

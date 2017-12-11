@@ -1,4 +1,4 @@
-function DCM_CSD_Plots(P)
+function [data,model,hz] = DCM_CSD_Plots(P)
 % Diagnostic output plots from a GROUP of DCMs for complex valued data
 % AS
 
@@ -17,11 +17,18 @@ end
 clear DCM
 
 DCM.Hz  = Hz;
-DCM.Hc  = {squeeze(mean( cat(4,Hc{:})  ,4))};
-DCM.Rc  = {squeeze(mean( cat(4,Rc{:})  ,4))};
-DCM.coh = {squeeze(mean( cat(4,coh{:}) ,4))};
-DCM.fsd = {squeeze(mean( cat(4,fsd{:}) ,4))};
-DCM.dtf = {squeeze(mean( cat(4,dtf{:}) ,4))};
+DCM.Hc  = {squeeze(( cat(4,Hc{:})  ))};
+DCM.Rc  = {squeeze(( cat(4,Rc{:})  ))};
+DCM.coh = {squeeze(( cat(4,coh{:}) ))};
+DCM.fsd = {squeeze(( cat(4,fsd{:}) ))};
+DCM.dtf = {squeeze(( cat(4,dtf{:}) ))};
+
+if nargout;
+    data  = DCM.Hc{:}+DCM.Rc{:};
+    model = DCM.Hc{:};
+    hz    = DCM.Hz;
+    return;
+end
 
 makeplots(DCM);
 
