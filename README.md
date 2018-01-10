@@ -1,3 +1,4 @@
 # CSD-DRUGS-BATCH
 
-![Screenshot](guishot.png)
+See 'ScriptStart.m':
+
